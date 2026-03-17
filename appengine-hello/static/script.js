@@ -10,5 +10,20 @@ function fetchMessage() {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("GET", "/hello", false);
     xmlHttp.send(null);
-    document.getElementById("message").innerHTML = xmlHttp.responseText;
+    
+    // Sanitize the response to prevent XSS attacks
+    // Use textContent instead of innerHTML to treat response as plain text
+    var messageElement = document.getElementById("message");
+    messageElement.textContent = xmlHttp.responseText;
+    
+    // Alternative approach if HTML rendering is required:
+    // Create a DOMPurify-like sanitization or use built-in text encoding
+    // messageElement.innerHTML = sanitizeHTML(xmlHttp.responseText);
+}
+
+// Helper function to sanitize HTML content (if HTML rendering is needed)
+function sanitizeHTML(htmlString) {
+    var temp = document.createElement('div');
+    temp.textContent = htmlString;
+    return temp.innerHTML;
 }
